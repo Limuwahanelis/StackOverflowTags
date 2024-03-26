@@ -5,7 +5,7 @@ namespace SOTags.Data
 {
     public class SOTagsDBContext:DbContext
     {
-        public DbSet<Tag> Pizzas { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
