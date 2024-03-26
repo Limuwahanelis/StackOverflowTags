@@ -1,0 +1,6 @@
+@SOTags_HostAddress = http://localhost:5019
+
+GET {{SOTags_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
