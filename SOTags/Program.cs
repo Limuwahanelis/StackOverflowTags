@@ -24,6 +24,7 @@ using (var serviceScope = app.Services.CreateScope())
     StackExchangeService stackExchangeService = services.GetRequiredService<StackExchangeService>();
     using (var context = new SOTagsDBContext())
     {
+        context.Database.EnsureCreated();
         APIHelper.SetUP();
         if(context.Tags.IsNullOrEmpty()) await stackExchangeService.ImportTagsToDB("https://api.stackexchange.com/2.3/tags?page=1&order=desc&sort=popular&site=stackoverflow&filter=!bMsg5CXCu9jto8", context);
 
