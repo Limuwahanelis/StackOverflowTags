@@ -9,5 +9,6 @@ namespace SOTags.Model
         public string? Name { get; set; }
         [JsonPropertyName("count")]
         public int Count { get; set; }
+        public float UsePercentage { get; set; }
     }
 }

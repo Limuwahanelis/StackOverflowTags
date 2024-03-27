@@ -1,5 +1,6 @@
 ﻿using SOTags.Data;
 using SOTags.Model;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace SOTags.Services
@@ -9,8 +10,6 @@ namespace SOTags.Services
         //https://api.stackexchange.com/2.3/tags?page=1&order=desc&sort=popular&site=stackoverflow&filter=!bMsg5CXCu9jto8
         public async Task ImportTagsToDB(string path,SOTagsDBContext context)
         {
-            List<Tag> tags = new List<Tag>();
-            Tag? tag;
             string data = "";
             using (HttpResponseMessage response = await APIHelper.client.GetAsync(path))
             {
@@ -23,13 +22,23 @@ namespace SOTags.Services
                 {
                     context.Database.EnsureCreated();
 
-
+                    List<Tag> tags = new List<Tag>();
                     JsonDocument jsonDocument = JsonDocument.Parse(data);
                     JsonElement tagsList = jsonDocument.RootElement.GetProperty("items");
+                    long totalTagUse = 0;
                     foreach (JsonElement element in tagsList.EnumerateArray())
                     {
-                        context.Tags.Add(element.Deserialize<Tag>());
+                        Tag tag = element.Deserialize<Tag>();
+                        tags.Add(tag);
+                        totalTagUse += tag.Count;
                     }
+                    foreach(Tag tag in tags)
+                    {
+                        tag.UsePercentage = float.Round(100f * tag.Count / totalTagUse, 2);
+                        Console.WriteLine(tag.UsePercentage);
+                        context.Tags.Add(tag);
+                    }
+                    //Console.WriteLine(context.Tags.First().UsePercentage);
                     context.SaveChanges();
                 }
             }
