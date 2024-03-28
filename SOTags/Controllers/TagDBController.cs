@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SOTags.CustomDataFormats;
+using SOTags.Data;
 using SOTags.Model;
 using SOTags.Services;
 using System.Text.Json;
@@ -12,10 +13,13 @@ namespace SOTags.Controllers
     public class TagDBController:ControllerBase
     {
         private readonly TagDBService _tagDBService;
-
-        public TagDBController(TagDBService tagDBService)
+        private readonly StackExchangeService _stackExchangeService;
+        private readonly SOTagsDBContext _context;
+        public TagDBController(TagDBService tagDBService, StackExchangeService stackExchangeService,SOTagsDBContext context)
         {
             _tagDBService = tagDBService;
+            _stackExchangeService = stackExchangeService;
+            _context = context;
         }
 
         [HttpGet]
@@ -37,6 +41,12 @@ namespace SOTags.Controllers
 
             return Ok(tags);
         }
+        [HttpGet("Update")]
+        public async Task<ActionResult> UpdateTagsDB()
+        {
+           await _stackExchangeService.UpdateTagsInDB(_context);
 
+           return Ok("Updated");
+        }
     }
 }
