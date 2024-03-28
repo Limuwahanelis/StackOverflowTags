@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SOTags.Data;
 using SOTags.Interfaces;
 using SOTags.Model;
@@ -13,12 +14,6 @@ namespace SOTags.Repositories
         {
             _context = context;
         }
-        public void InitalizeDatabase(List<Tag> tags)
-        {
-            _context.Database.EnsureCreated();
-            if (!_context.Tags.IsNullOrEmpty()) return;
-            AddOrUpdateTagsToDatabase(tags);
-        }
         public void AddOrUpdateTagsToDatabase(List<Tag> tags)
         {
             _context.Database.EnsureCreated();
@@ -32,6 +27,10 @@ namespace SOTags.Repositories
         }
         public void UpdateTag(Tag oldTag,Tag newTag)
         {
+            if(oldTag.Count != newTag.Count)
+            {
+                Console.WriteLine($"new tag differ by {newTag.Count - oldTag.Count}");
+            }
             oldTag.Name = newTag.Name;
             oldTag.Count = newTag.Count;
         }
@@ -39,10 +38,10 @@ namespace SOTags.Repositories
         {
             return _context.Tags.Count();
         }
-        public List<string?> GetTagsName(int fromId, int toId)
+        public List<string?> GetTagsName(int pageSize,int lastId)
         {
             List<string?> toReturn;
-            toReturn = _context.Tags.Where(tag => tag.Id >= fromId && tag.Id <= toId).Select(tag => tag.Name).ToList();
+            toReturn = _context.Tags.OrderBy(t=>t.Id).Where(t=>t.Id>lastId).Take(pageSize).Select(t=>t.Name).ToList();
             return toReturn;
         }
         public void CalculateTagsUsage(long totalNumberOfTagsUse)
@@ -50,7 +49,6 @@ namespace SOTags.Repositories
             foreach (var tag in _context.Tags)
             {
                 tag.UsePercentage = float.Round(100f * tag.Count / totalNumberOfTagsUse, 2);
-                Console.WriteLine(tag.UsePercentage);
             }
             _context.SaveChanges();
         }

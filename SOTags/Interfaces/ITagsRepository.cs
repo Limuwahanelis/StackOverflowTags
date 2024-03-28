@@ -6,8 +6,7 @@ namespace SOTags.Interfaces
     {
         public void AddOrUpdateTagsToDatabase(List<Tag> tags);
         public void CalculateTagsUsage(long totalNumberOfTagsUse);
-        public void InitalizeDatabase(List<Tag> tags);
-        public List<string?> GetTagsName(int fromId, int toId);
+        public List<string?> GetTagsName(int pageSize, int lastId);
         public int GetNumberOfTagsInDB();
         public IQueryable<Tag> GetAllTags();
     }
