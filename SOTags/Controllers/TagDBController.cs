@@ -13,12 +13,12 @@ namespace SOTags.Controllers
     public class TagDBController:ControllerBase
     {
         private readonly PagedTagDBService _tagDBService;
-        private readonly StackExchangeService _stackExchangeService;
+        private readonly StackExchangeTagDBService _stackExchangeTagDBService;
         private readonly SOTagsDBContext _context;
-        public TagDBController(PagedTagDBService tagDBService, StackExchangeService stackExchangeService,SOTagsDBContext context)
+        public TagDBController(PagedTagDBService tagDBService, StackExchangeTagDBService stackExchangeService,SOTagsDBContext context)
         {
             _tagDBService = tagDBService;
-            _stackExchangeService = stackExchangeService;
+            _stackExchangeTagDBService = stackExchangeService;
             _context = context;
         }
 
@@ -44,7 +44,7 @@ namespace SOTags.Controllers
         [HttpGet("Update")]
         public async Task<ActionResult> UpdateTagsDB()
         {
-           await _stackExchangeService.UpdateTagsInDB(_context);
+           await _stackExchangeTagDBService.UpdateTagsInDB();
 
            return Ok("Updated");
         }

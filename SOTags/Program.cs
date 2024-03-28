@@ -1,6 +1,7 @@
 using Microsoft.IdentityModel.Tokens;
 using SOTags;
 using SOTags.Data;
+using SOTags.Exceptions;
 using SOTags.Interfaces;
 using SOTags.Repositories;
 using SOTags.Services;
@@ -13,7 +14,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<StackExchangeService>();
 builder.Services.AddDbContext<SOTagsDBContext>();
 builder.Services.AddTransient<PagedTagDBService>();
+builder.Services.AddTransient<StackExchangeTagDBService>();
 builder.Services.AddScoped<ITagsRepository,TagsRepository>();
+
+builder.Services.AddExceptionHandler<StackExchangeServerExceptionHandler>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -23,18 +29,11 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 APIHelper.SetUP();
-// populate database if empty
 using (var serviceScope = app.Services.CreateScope())
 {
     var services = serviceScope.ServiceProvider;
-    StackExchangeService stackExchangeService = services.GetRequiredService<StackExchangeService>();
-    //using (var context = new SOTagsDBContext())
-    //{
-        //context.Database.EnsureCreated();
-        //if(context.Tags.IsNullOrEmpty()) 
-        await stackExchangeService.ImportTagsFromStackOverflow();
-
-    //}
+    StackExchangeTagDBService stackExchangeTagDBService = services.GetRequiredService<StackExchangeTagDBService>();
+    await stackExchangeTagDBService.ImportTagsFromStackOverflow();
 }
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -46,6 +45,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseExceptionHandler();
 
 app.MapControllers();
 
