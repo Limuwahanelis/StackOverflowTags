@@ -17,15 +17,33 @@ namespace SOTags.Repositories
         {
             _context.Database.EnsureCreated();
             if (!_context.Tags.IsNullOrEmpty()) return;
-            AddTagsToDatabase(tags);
+            AddOrUpdateTagsToDatabase(tags);
         }
-        public void AddTagsToDatabase(List<Tag> tags)
+        public void AddOrUpdateTagsToDatabase(List<Tag> tags)
         {
+            _context.Database.EnsureCreated();
             foreach (Tag tag in tags)
             {
-                _context.Tags.Add(tag);
+                Tag? oldTag = _context.Tags.Where(t => t.Name == tag.Name).FirstOrDefault();
+                if (oldTag != null) UpdateTag(oldTag, tag);
+                else _context.Tags.Add(tag);
             }
             _context.SaveChanges();
+        }
+        public void UpdateTag(Tag oldTag,Tag newTag)
+        {
+            oldTag.Name = newTag.Name;
+            oldTag.Count = newTag.Count;
+        }
+        public int GetNumberOfTagsInDB()
+        {
+            return _context.Tags.Count();
+        }
+        public List<string?> GetTagsName(int fromId, int toId)
+        {
+            List<string?> toReturn;
+            toReturn = _context.Tags.Where(tag => tag.Id >= fromId && tag.Id <= toId).Select(tag => tag.Name).ToList();
+            return toReturn;
         }
         public void CalculateTagsUsage(long totalNumberOfTagsUse)
         {

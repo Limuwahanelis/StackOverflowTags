@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-builder.Services.AddScoped<StackExchangeService>();
+builder.Services.AddTransient<StackExchangeService>();
 builder.Services.AddDbContext<SOTagsDBContext>();
 builder.Services.AddTransient<PagedTagDBService>();
 builder.Services.AddScoped<ITagsRepository,TagsRepository>();

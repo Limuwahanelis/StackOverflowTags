@@ -1,8 +1,10 @@
 ﻿using Azure;
 using SOTags.Data;
+using SOTags.Interfaces;
 using SOTags.Model;
 using SOTags.Repositories;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -14,88 +16,87 @@ namespace SOTags.Services
 {
     public class StackExchangeService
     {
-        private readonly TagsRepository _tagsRepository;
+        private readonly ITagsRepository _tagsRepository;
 
-        public StackExchangeService(TagsRepository tagsRepository)
+        public StackExchangeService(ITagsRepository tagsRepository)
         {
             _tagsRepository = tagsRepository;
         }
 
         public async Task ImportTagsFromStackOverflow()
         {
+            //if (true) return;
             int pageSize = 100;
             int pageIndex = 1;
             long totalNumberOfTagsUse = 0;
             string data = "";
-            //for (int numberOfEntries = 0; numberOfEntries < 10;)
-            //{
-                string path = $"https://api.stackexchange.com/2.3/tags?page={pageIndex}&pagesize={pageSize}&order=desc&sort=popular&site=stackoverflow&filter=!bMsg5CXCu9jto8";
-
-                using (HttpResponseMessage response = await APIHelper.client.GetAsync(path))
-                {
-                    if (response.IsSuccessStatusCode)
-                    {
-                        //data = await response.Content.ReadAsStringAsync();
-                    }
-                    var absPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                    data = System.IO.File.ReadAllText(absPath + "/Jsons/data.json");
-                    List<Tag> tags = GetTagsFromStackExchange(data, ref totalNumberOfTagsUse);
-                    _tagsRepository.InitalizeDatabase(tags);
-                    //numberOfEntries += tags.Count;
-                    //if (!JsonDocument.Parse(data).RootElement.GetProperty("has_more").GetBoolean()) break;
-                    pageIndex++;
-
-                }
-            //}
+            for (int numberOfEntries = 0; numberOfEntries < 1000;)
+            {
+                data = await GetPagedDataFromStackExchange(pageSize, pageIndex);
+                List<Tag> tags = GetTagsFromStackExchangeResponse(data, ref totalNumberOfTagsUse);
+                _tagsRepository.AddOrUpdateTagsToDatabase(tags);
+                numberOfEntries += tags.Count;
+                if (!JsonDocument.Parse(data).RootElement.GetProperty("has_more").GetBoolean()) break;
+                pageIndex++;
+            }
             Console.WriteLine($"total tags usage = {totalNumberOfTagsUse}");
             _tagsRepository.CalculateTagsUsage(totalNumberOfTagsUse);
         }
+
         public async Task UpdateTagsInDB(SOTagsDBContext context)
         {
             int pageSize = 100;
             int pageIndex = 1;
             long totalNumberOfTagsUse = 0;
-            string path;
-            string data = "";
             List<Tag> tags;
-            using (context)
+
+            for (int numberOfTagsUpdated = 0; numberOfTagsUpdated < _tagsRepository.GetNumberOfTagsInDB();)
             {
-                for (int numberOfEntries = 0; numberOfEntries < 1000;)
-                {
-                    string tagsToUpdate = string.Join(";", context.Tags.Where(tag => tag.Id <= pageSize * pageIndex).Select(tag => tag.Name).ToList());
-                    // If tags contains some special characters it needs to be properly encode for request to work
-                    string tagsUrl = HttpUtility.UrlEncode(tagsToUpdate);
-                    path = $"https://api.stackexchange.com/2.3/tags/{tagsUrl}/info?pagesize={pageSize}&order=desc&sort=popular&site=stackoverflow&filter=!bMsg5CXCu9jto8";
-                    using (HttpResponseMessage response = await APIHelper.client.GetAsync(path))
-                    {
-                        if (response.IsSuccessStatusCode)
-                        {
-                            data = await response.Content.ReadAsStringAsync();
-                        }
-                        tags = GetTagsFromStackExchange(data, ref totalNumberOfTagsUse);
+                List<string?> tagsNames = _tagsRepository.GetTagsName(1 + (pageIndex - 1) * pageSize, pageIndex * pageSize);
+                string tagsToUpdate = string.Join(";", tagsNames);
 
-                        List<Tag> toUpdate = context.Tags.Where(t => t.Id <= 10).ToList();
-                        for (int i = 0; i < 10; i++)
-                        {
-                            toUpdate[i].Name = tags[i].Name;
-                            toUpdate[i].Count = tags[i].Count;
-                        }
-                        numberOfEntries += tags.Count;
-                        pageIndex++;
+                // If tags contains some special characters it needs to be properly encoded for request to work
+                string tagsUrl = HttpUtility.UrlEncode(tagsToUpdate);
+                string data = await GetTagsInfoFromStackExchange(pageSize, tagsUrl);
 
-                    }
-                }
-                Console.WriteLine($"total tags usage = {totalNumberOfTagsUse}");
-                foreach (var tag in context.Tags)
-                {
-                    tag.UsePercentage = float.Round(100f * tag.Count / totalNumberOfTagsUse, 2);
-                }
-
-                context.SaveChanges();
+                tags = GetTagsFromStackExchangeResponse(data, ref totalNumberOfTagsUse);
+                _tagsRepository.AddOrUpdateTagsToDatabase(tags);
+                numberOfTagsUpdated += tagsNames.Count;
+                pageIndex++;
             }
+            _tagsRepository.CalculateTagsUsage(totalNumberOfTagsUse);
         }
-
-        private List<Tag> GetTagsFromStackExchange(string data,ref long totalNumberOfTagsUse)
+        private async Task<string> GetTagsInfoFromStackExchange(int pageSize, string tagsUrl)
+        {
+            string path = $"https://api.stackexchange.com/2.3/tags/{tagsUrl}/info?pagesize={pageSize}&order=desc&sort=popular&site=stackoverflow&filter=!bMsg5CXCu9jto8";
+            string data="";
+            using (HttpResponseMessage response = await APIHelper.client.GetAsync(path))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    data = await response.Content.ReadAsStringAsync();
+                }
+                //var absPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                //data = System.IO.File.ReadAllText(absPath + "/Jsons/data.json");
+            }
+            return data;
+        }
+        private async Task<string> GetPagedDataFromStackExchange(int pageSize, int pageIndex)
+        {
+            string path = $"https://api.stackexchange.com/2.3/tags?page={pageIndex}&pagesize={pageSize}&order=desc&sort=popular&site=stackoverflow&filter=!bMsg5CXCu9jto8";
+            string data = "";
+            using (HttpResponseMessage response = await APIHelper.client.GetAsync(path))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    data = await response.Content.ReadAsStringAsync();
+                }
+                //var absPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                //data = System.IO.File.ReadAllText(absPath + "/Jsons/data.json");
+            }
+            return data;
+        }
+        private List<Tag> GetTagsFromStackExchangeResponse(string data,ref long totalNumberOfTagsUse)
         {
             List<Tag> tags = new List<Tag>();
             JsonDocument jsonDocument = JsonDocument.Parse(data);
