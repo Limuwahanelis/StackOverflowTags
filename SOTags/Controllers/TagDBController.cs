@@ -12,10 +12,10 @@ namespace SOTags.Controllers
     [Route("[controller]")]
     public class TagDBController:ControllerBase
     {
-        private readonly TagDBService _tagDBService;
+        private readonly PagedTagDBService _tagDBService;
         private readonly StackExchangeService _stackExchangeService;
         private readonly SOTagsDBContext _context;
-        public TagDBController(TagDBService tagDBService, StackExchangeService stackExchangeService,SOTagsDBContext context)
+        public TagDBController(PagedTagDBService tagDBService, StackExchangeService stackExchangeService,SOTagsDBContext context)
         {
             _tagDBService = tagDBService;
             _stackExchangeService = stackExchangeService;
