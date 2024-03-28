@@ -1,7 +1,9 @@
 ﻿using Azure;
 using SOTags.Data;
 using SOTags.Model;
+using SOTags.Repositories;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Web;
@@ -12,44 +14,41 @@ namespace SOTags.Services
 {
     public class StackExchangeService
     {
-        public async Task ImportTagsToDB(SOTagsDBContext context)
+        private readonly TagsRepository _tagsRepository;
+
+        public StackExchangeService(TagsRepository tagsRepository)
         {
-            int pageSize=100;
-            int pageIndex=1;
+            _tagsRepository = tagsRepository;
+        }
+
+        public async Task ImportTagsFromStackOverflow()
+        {
+            int pageSize = 100;
+            int pageIndex = 1;
             long totalNumberOfTagsUse = 0;
             string data = "";
-            using (context)
-            {
-                for (int numberOfEntries = 0; numberOfEntries < 1000;)
-                {
-                   string path = $"https://api.stackexchange.com/2.3/tags?page={pageIndex}&pagesize={pageSize}&order=desc&sort=popular&site=stackoverflow&filter=!bMsg5CXCu9jto8";
-                   
-                    using (HttpResponseMessage response = await APIHelper.client.GetAsync(path))
-                    {
-                        if (response.IsSuccessStatusCode)
-                        {
-                            data = await response.Content.ReadAsStringAsync();
-                        }
-                        List<Tag> tags = GetTagsFromStackExchange(data, ref totalNumberOfTagsUse);
-                        foreach (Tag tag in tags)
-                        {
-                            context.Tags.Add(tag);
-                        }
-                        numberOfEntries += tags.Count;
-                        if (!JsonDocument.Parse(data).RootElement.GetProperty("has_more").GetBoolean()) break;
-                        pageIndex++;
+            //for (int numberOfEntries = 0; numberOfEntries < 10;)
+            //{
+                string path = $"https://api.stackexchange.com/2.3/tags?page={pageIndex}&pagesize={pageSize}&order=desc&sort=popular&site=stackoverflow&filter=!bMsg5CXCu9jto8";
 
-                    }
-                }
-                context.SaveChanges();
-                Console.WriteLine($"total tags usage = { totalNumberOfTagsUse}");
-                foreach (var tag in context.Tags)
+                using (HttpResponseMessage response = await APIHelper.client.GetAsync(path))
                 {
-                    tag.UsePercentage = float.Round(100f * tag.Count / totalNumberOfTagsUse, 2);
-                    Console.WriteLine(tag.UsePercentage);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        //data = await response.Content.ReadAsStringAsync();
+                    }
+                    var absPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    data = System.IO.File.ReadAllText(absPath + "/Jsons/data.json");
+                    List<Tag> tags = GetTagsFromStackExchange(data, ref totalNumberOfTagsUse);
+                    _tagsRepository.InitalizeDatabase(tags);
+                    //numberOfEntries += tags.Count;
+                    //if (!JsonDocument.Parse(data).RootElement.GetProperty("has_more").GetBoolean()) break;
+                    pageIndex++;
+
                 }
-                context.SaveChanges();
-            }
+            //}
+            Console.WriteLine($"total tags usage = {totalNumberOfTagsUse}");
+            _tagsRepository.CalculateTagsUsage(totalNumberOfTagsUse);
         }
         public async Task UpdateTagsInDB(SOTagsDBContext context)
         {
