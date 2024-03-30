@@ -9,6 +9,7 @@ using SOTags.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,9 @@ namespace SOTags.UnitTest
         [Fact]
         public void GetTags_PageIsSize3DataIs5Size_RetrunsTrue()
         {
+            string data;
+            var absPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            data = System.IO.File.ReadAllText(absPath + "/Jsons/data.json");
             ITagsRepository tagsRepository = Substitute.For<ITagsRepository>();
             var testData = new List<Tag>()
             {

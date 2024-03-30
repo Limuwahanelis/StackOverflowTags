@@ -24,7 +24,9 @@
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
-
+<ItemGroup>
+     <InternalsVisibleTo Include="SOTags.IntegrationTests" />
+</ItemGroup>
   <ItemGroup>
     <Folder Include="Jsons\" />
   </ItemGroup>
