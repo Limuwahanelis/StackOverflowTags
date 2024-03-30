@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using SOTags.Data;
 using SOTags.Interfaces;
 using SOTags.Model;
@@ -27,10 +28,10 @@ namespace SOTags.Repositories
         }
         public void UpdateTag(Tag oldTag,Tag newTag)
         {
-            if(oldTag.Count != newTag.Count)
-            {
-                Console.WriteLine($"new tag differ by {newTag.Count - oldTag.Count}");
-            }
+            //if(oldTag.Count != newTag.Count)
+            //{
+            //    Console.WriteLine($"new tag differ by {newTag.Count - oldTag.Count}");
+            //}
             oldTag.Name = newTag.Name;
             oldTag.Count = newTag.Count;
         }
@@ -51,6 +52,20 @@ namespace SOTags.Repositories
                 tag.UsePercentage = float.Round(100f * tag.Count / totalNumberOfTagsUse, 2);
             }
             _context.SaveChanges();
+        }
+        public void CalculateTagsUsage()
+        {
+            long totalNumberOfTagsUse = 0;
+            foreach (var tag in _context.Tags)
+            {
+                totalNumberOfTagsUse += tag.Count;
+            }
+            foreach (var tag in _context.Tags)
+            {
+                tag.UsePercentage= float.Round(100f * tag.Count / totalNumberOfTagsUse, 2);
+            }
+            _context.SaveChanges();
+            Log.Information("{totaltagsCount} tags count in repo", totalNumberOfTagsUse);
         }
         public IQueryable<Tag> GetAllTags()
         {

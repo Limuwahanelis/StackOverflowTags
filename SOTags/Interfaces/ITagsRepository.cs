@@ -9,5 +9,6 @@ namespace SOTags.Interfaces
         public List<string?> GetTagsName(int pageSize, int lastId);
         public int GetNumberOfTagsInDB();
         public IQueryable<Tag> GetAllTags();
+        void CalculateTagsUsage();
     }
 }
