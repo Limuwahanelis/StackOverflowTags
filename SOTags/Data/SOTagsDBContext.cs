@@ -7,9 +7,14 @@ namespace SOTags.Data
     {
         public DbSet<Tag> Tags { get; set; }
 
+        public SOTagsDBContext (DbContextOptions<SOTagsDBContext> options):base(options)
+        {
+
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=SOTagsDB;Trusted_Connection=True;");
+           if(!optionsBuilder.IsConfigured) optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=SOTagsDB;Trusted_Connection=True;");
         }
     }
 }
