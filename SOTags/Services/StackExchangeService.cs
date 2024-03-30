@@ -1,21 +1,10 @@
-﻿using Azure;
-using SOTags.Data;
+﻿
 using SOTags.Exceptions;
 using SOTags.Interfaces;
-using SOTags.Model;
-using SOTags.Repositories;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using System.Text.Json;
-using System.Web;
-using static System.Net.WebRequestMethods;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SOTags.Services
 {
-    public class StackExchangeService
+    public class StackExchangeService: IStackExchangeService
     {
         public async Task<string> GetTagsInfoFromStackExchange(int pageSize, string tagsUrl)
         {
@@ -48,6 +37,13 @@ namespace SOTags.Services
                 if (response.IsSuccessStatusCode)
                 {
                     data = await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    throw new StackExchangeServerCouldNotBeReachedException()
+                    {
+                        StackExchangeSetverMessage = await response.Content.ReadAsStringAsync()
+                    };
                 }
                 //var absPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 //data = System.IO.File.ReadAllText(absPath + "/Jsons/data.json");
