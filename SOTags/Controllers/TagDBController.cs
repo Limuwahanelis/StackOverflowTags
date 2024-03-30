@@ -14,12 +14,10 @@ namespace SOTags.Controllers
     {
         private readonly PagedTagDBService _tagDBService;
         private readonly StackExchangeTagDBService _stackExchangeTagDBService;
-        private readonly SOTagsDBContext _context;
-        public TagDBController(PagedTagDBService tagDBService, StackExchangeTagDBService stackExchangeService,SOTagsDBContext context)
+        public TagDBController(PagedTagDBService tagDBService, StackExchangeTagDBService stackExchangeService)
         {
             _tagDBService = tagDBService;
             _stackExchangeTagDBService = stackExchangeService;
-            _context = context;
         }
 
         [HttpGet]
