@@ -5,13 +5,18 @@ using SOTags.Exceptions;
 using SOTags.Interfaces;
 using SOTags.Repositories;
 using SOTags.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .CreateLogger();
 
-
+//builder.Logging.ClearProviders();
 // Add services to the container.
-builder.Services.AddTransient<StackExchangeService>();
+builder.Services.AddTransient<IStackExchangeService,StackExchangeService>();
 builder.Services.AddDbContext<SOTagsDBContext>();
 builder.Services.AddTransient<PagedTagDBService>();
 builder.Services.AddTransient<StackExchangeTagDBService>();
@@ -33,7 +38,16 @@ using (var serviceScope = app.Services.CreateScope())
 {
     var services = serviceScope.ServiceProvider;
     StackExchangeTagDBService stackExchangeTagDBService = services.GetRequiredService<StackExchangeTagDBService>();
-    await stackExchangeTagDBService.ImportTagsFromStackOverflow();
+    try
+    {
+        await stackExchangeTagDBService.ImportTagsFromStackOverflow();
+    }
+    catch (StackExchangeServerCouldNotBeReachedException e) 
+    {
+        Log.Logger.Fatal($"An problem occured when reaching Stack Exchange server. Message from server: {e.StackExchangeSetverMessage}\n" +
+                $"Managed to {e.OperationMessage}");
+        //throw;
+    }
 }
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
