@@ -18,11 +18,38 @@ namespace SOTags.IntegrationTests
             var application = new SOTagsWebApplicationFactory();
 
             var client = application.CreateClient();
-            TagParemeters tagParemeters = new TagParemeters();
             var response = await client.GetAsync("/TagDB?pageNumber=1&pageSize=200");
-            string aa = await response.Content.ReadAsStringAsync();
+            string data = await response.Content.ReadAsStringAsync();
+            List<Tag> tags = GetTagsFromResponse(data);
             response.EnsureSuccessStatusCode();
-          //Assert.NotNull(response);
+            Assert.NotNull(tags);
+        }
+
+        [Fact]
+        public async void GetTags_ImportTags()
+        {
+            var application = new SOTagsWebApplicationFactory();
+
+            var client = application.CreateClient();
+            var response = await client.GetAsync("/TagDB/Update");
+            string content = await response.Content.ReadAsStringAsync();
+            response.EnsureSuccessStatusCode();
+            Assert.True(response.IsSuccessStatusCode);
+        }
+
+
+
+        private List<Tag> GetTagsFromResponse(string data)
+        {
+            List<Tag> tags = new List<Tag>();
+            JsonDocument jsonDocument = JsonDocument.Parse(data);
+            JsonElement tagsList = jsonDocument.RootElement;
+            foreach (JsonElement element in tagsList.EnumerateArray())
+            {
+                Tag tag = element.Deserialize<Tag>();
+                tags.Add(tag);
+            }
+            return tags;
         }
     }
 }
