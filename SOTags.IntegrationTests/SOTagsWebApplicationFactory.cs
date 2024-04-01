@@ -16,7 +16,6 @@ namespace SOTags.IntegrationTests
         private const string ConnectionString = @"Server=(localdb)\mssqllocaldb;Database=EFTestSample;Trusted_Connection=True";
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            //base.ConfigureWebHost(builder);
             builder.ConfigureTestServices(services =>
             {
                 services.RemoveAll(typeof(DbContextOptions<SOTagsDBContext>));
