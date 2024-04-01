@@ -13,9 +13,9 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace SOTags.UnitTest
+namespace SOTags.UnitTest.Tests
 {
-    
+
     public class TagsRepositoryTests
     {
         string connectionString = "Server=(localdb)\\mssqllocaldb;Database=TagsRepoTestDB;Trusted_Connection=True;";
@@ -25,14 +25,14 @@ namespace SOTags.UnitTest
         {
             SOTagsDBContext context = new SOTagsDBContext(new DbContextOptionsBuilder<SOTagsDBContext>()
             .UseSqlServer(connectionString).Options);
-            List<Tag> tags=new List<Tag>();
+            List<Tag> tags = new List<Tag>();
             TagParemeters tagParemeters = new TagParemeters()
             {
                 PageSize = 25,
                 PageNumber = 2
             };
 
-            using (context) 
+            using (context)
             {
 
                 context.Database.EnsureCreated();
@@ -40,10 +40,10 @@ namespace SOTags.UnitTest
 
                 TagsRepository repo = new TagsRepository(context);
                 repo.CalculateTagsUsage();
-                tags= repo.GetTagsPaged(tagParemeters.PageSize,tagParemeters.PageNumber,TagSortingHelper.TagSortingType.NAME,false,out int count);
+                tags = repo.GetTagsPaged(tagParemeters.PageSize, tagParemeters.PageNumber, TagSortingHelper.TagSortingType.NAME, false, out int count);
 
             }
-                Assert.Equal("docker",tags.First().Name);
+            Assert.Equal("docker", tags.First().Name);
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace SOTags.UnitTest
                 TagsRepository repo = new TagsRepository(context);
                 repo.CalculateTagsUsage();
 
-                Assert.Equal(float.Round(7.67f,2), context.Tags.AsNoTracking().OrderByDescending(t=>t.UsePercentage).First().UsePercentage);
+                Assert.Equal(float.Round(7.67f, 2), context.Tags.AsNoTracking().OrderByDescending(t => t.UsePercentage).First().UsePercentage);
             }
         }
         private void AddTagsToTestDB(SOTagsDBContext context)

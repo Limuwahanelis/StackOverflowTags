@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Core;
+using Azure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using NSubstitute;
 using SOTags.CustomDataFormats;
@@ -13,9 +15,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SOTags.UnitTest
+namespace SOTags.UnitTest.Tests
 {
-    
+
     public class PagedTagDBServiceTests
     {
 
@@ -24,7 +26,7 @@ namespace SOTags.UnitTest
         {
             string data;
             var absPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            data = System.IO.File.ReadAllText(absPath + "/Jsons/data.json");
+            data = File.ReadAllText(absPath + "/Jsons/data.json");
             ITagsRepository tagsRepository = Substitute.For<ITagsRepository>();
             var testData = new List<Tag>()
             {
@@ -39,7 +41,7 @@ namespace SOTags.UnitTest
             {
                 PageSize = 3,
             };
-            tagsRepository.GetTagsPaged(par.PageSize,par.PageNumber,TagSortingHelper.TagSortingType.ID,par.IsDescending,out Arg.Any<int>()).Returns(x => { x[4] = 10; return testData; });
+            tagsRepository.GetTagsPaged(par.PageSize, par.PageNumber, TagSortingHelper.TagSortingType.ID, par.IsDescending, out Arg.Any<int>()).Returns(x => { x[4] = 10; return testData; });
             PagedList<Tag> tags = pagedTagDBService.GetTags(par);
             Assert.True(tags.HasNext);
         }
@@ -90,5 +92,6 @@ namespace SOTags.UnitTest
             PagedList<Tag> tags = pagedTagDBService.GetTags(par);
             Assert.True(tags.HasPrevious);
         }
+
     }
 }
