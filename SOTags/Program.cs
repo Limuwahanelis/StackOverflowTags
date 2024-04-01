@@ -40,7 +40,7 @@ using (var serviceScope = app.Services.CreateScope())
     StackExchangeTagDBService stackExchangeTagDBService = services.GetRequiredService<StackExchangeTagDBService>();
     try
     {
-        await stackExchangeTagDBService.ImportTagsFromStackOverflow();
+        await stackExchangeTagDBService.ImportTagsFromStackOverflow(1000);
     }
     catch (StackExchangeServerCouldNotBeReachedException e) 
     {
