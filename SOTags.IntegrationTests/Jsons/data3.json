@@ -1,0 +1,47 @@
+{
+  "items": [
+    {
+      "count": 343561,
+      "name": "python-3.x"
+    },
+    {
+      "count": 338038,
+      "name": "ruby-on-rails"
+    },
+    {
+      "count": 337828,
+      "name": ".net"
+    },
+    {
+      "count": 334494,
+      "name": "sql-server"
+    },
+    {
+      "count": 333344,
+      "name": "swift"
+    },
+    {
+      "count": 311745,
+      "name": "django"
+    },
+    {
+      "count": 304024,
+      "name": "angular"
+    },
+    {
+      "count": 292321,
+      "name": "objective-c"
+    },
+    {
+      "count": 286598,
+      "name": "pandas"
+    },
+    {
+      "count": 286428,
+      "name": "excel"
+    }
+  ],
+  "has_more": true,
+  "quota_max": 10000,
+  "quota_remaining": 9999
+}

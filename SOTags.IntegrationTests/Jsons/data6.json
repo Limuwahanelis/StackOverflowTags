@@ -1,0 +1,47 @@
+{
+  "items": [
+    {
+      "count": 159615,
+      "name": "xcode"
+    },
+    {
+      "count": 158338,
+      "name": "amazon-web-services"
+    },
+    {
+      "count": 155621,
+      "name": "bash"
+    },
+    {
+      "count": 152175,
+      "name": "git"
+    },
+    {
+      "count": 151483,
+      "name": "oracle"
+    },
+    {
+      "count": 147933,
+      "name": "spring-boot"
+    },
+    {
+      "count": 145923,
+      "name": "dataframe"
+    },
+    {
+      "count": 143218,
+      "name": "firebase"
+    },
+    {
+      "count": 141554,
+      "name": "list"
+    },
+    {
+      "count": 140256,
+      "name": "vb.net"
+    }
+  ],
+  "has_more": true,
+  "quota_max": 10000,
+  "quota_remaining": 9999
+}
