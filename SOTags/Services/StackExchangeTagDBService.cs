@@ -18,14 +18,12 @@ namespace SOTags.Services
             _tagsRepository = tagsRepository;
             _stackExchangeService = stackExchangeService;
         }
-        public async Task ImportTagsFromStackOverflow()
+        public async Task ImportTagsFromStackOverflow(int numberOfTagsToImport)
         {
-
             int pageSize = 100;
             int pageIndex = 1;
-            long totalNumberOfTagsUse = 0;
             string data = "";
-            for (int numberOfEntries = 0; numberOfEntries < 1000;)
+            for (int numberOfEntries = 0; numberOfEntries < numberOfTagsToImport;)
             {
                 try
                 {
@@ -33,32 +31,30 @@ namespace SOTags.Services
                 }
                 catch (StackExchangeServerCouldNotBeReachedException ex)
                 {
-                    ex.OperationMessage = $"Imported or updated {numberOfEntries} tags from required {1000} entries";
+                    ex.OperationMessage = $"Imported or updated {numberOfEntries} tags from required {numberOfTagsToImport} entries";
                     throw;
                 }
-                List<Tag> tags = GetTagsFromStackExchangeResponse(data, ref totalNumberOfTagsUse);
-                //Console.WriteLine($"total tags usage = {totalNumberOfTagsUse}");
+                List<Tag> tags = GetTagsFromStackExchangeResponse(data);
                 _tagsRepository.AddOrUpdateTagsToDatabase(tags);
                 numberOfEntries += tags.Count;
                 if (!JsonDocument.Parse(data).RootElement.GetProperty("has_more").GetBoolean()) break;
                 pageIndex++;
             }
-            Console.WriteLine($"total tags usage = {totalNumberOfTagsUse}");
-            _tagsRepository.CalculateTagsUsage(totalNumberOfTagsUse);
+            _tagsRepository.CalculateTagsUsage();
         }
 
         public async Task UpdateTagsInDB()
         {
+            int minNumberOftagsTOUpdate = 1000;
             int pageSize = 100;
             int pageIndex = 1;
-            long totalNumberOfTagsUse = 0;
             List<Tag> tags;
             string data = "";
             int numberOfTagsUpdated = 0;
             List<string?> allNames= new List<string?>();
             while ( numberOfTagsUpdated < _tagsRepository.GetNumberOfTagsInDB())
             {
-                List<string?> tagsNames = _tagsRepository.GetTagsName(pageSize, (pageIndex-1)*pageSize);//(1 + (pageIndex - 1) * pageSize, pageIndex * pageSize);
+                List<string?> tagsNames = _tagsRepository.GetTagsName(pageSize, pageIndex-1);
                 allNames.AddRange(tagsNames);
                 string tagsToUpdate = string.Join(";", tagsNames);
                 // If tags contains some special characters it needs to be properly encoded for request to work
@@ -72,44 +68,44 @@ namespace SOTags.Services
                     ex.OperationMessage = $"Updated {numberOfTagsUpdated} tags from {_tagsRepository.GetNumberOfTagsInDB()}";
                     throw;
                 }
-                tags = GetTagsFromStackExchangeResponse(data, ref totalNumberOfTagsUse);
+                tags = GetTagsFromStackExchangeResponse(data);
                 _tagsRepository.AddOrUpdateTagsToDatabase(tags);
-                numberOfTagsUpdated += tagsNames.Count;
+                numberOfTagsUpdated += tags.Count;
                 pageIndex++;
             }
+            pageIndex = 1;
             // if for some reason database lacks required 1000 tags, get the rest from stack exchange
-            if(numberOfTagsUpdated<1000)
+            if (numberOfTagsUpdated< minNumberOftagsTOUpdate)
             {
                 int numberOfEntries = numberOfTagsUpdated;
-                while (numberOfEntries < 1000)
+                while (numberOfEntries < minNumberOftagsTOUpdate)
                 {
-                        try
+                    try
                     {
                         data = await _stackExchangeService.GetPagedDataFromStackExchange(pageSize, pageIndex);
                     }
                     catch (StackExchangeServerCouldNotBeReachedException ex)
                     {
-                        ex.OperationMessage = $"Imported or updated {numberOfEntries} tags from required {1000} entries";
+                        ex.OperationMessage = $"Imported or updated {numberOfEntries} tags from required {minNumberOftagsTOUpdate} entries";
                         throw;
                     }
-                    tags = GetTagsFromStackExchangeResponse(data, ref totalNumberOfTagsUse);
-                    if(numberOfEntries+tags.Count()>1000)
+                    tags = GetTagsFromStackExchangeResponse(data);
+                    if (numberOfEntries + tags.Count() > minNumberOftagsTOUpdate)
                     {
-                        tags.RemoveRange(1000 - numberOfEntries, tags.Count() - (1000 - numberOfEntries));
+                        tags.RemoveRange(minNumberOftagsTOUpdate - numberOfEntries, tags.Count() - (minNumberOftagsTOUpdate - numberOfEntries));
                     }
                     //Console.WriteLine($"total tags usage = {totalNumberOfTagsUse}");
                     _tagsRepository.AddOrUpdateTagsToDatabase(tags);
-                    numberOfEntries += tags.Count;
-                    Log.Information("Added {tagsNumber} tags during tag updating", numberOfEntries - numberOfTagsUpdated);
+                    int differnce = _tagsRepository.GetNumberOfTagsInDB() - numberOfEntries;
+                    numberOfEntries += differnce;
+                    Log.Information("Added {tagsNumber} tags during tag updating", differnce);
                     if (!JsonDocument.Parse(data).RootElement.GetProperty("has_more").GetBoolean()) break;
                     pageIndex++;
                 }
             }
-            List<string?> duplciates = allNames.GroupBy(x => x).SelectMany(x => x.Skip(1)).ToList(); 
-            Console.WriteLine($"total tags usage = {totalNumberOfTagsUse}");
             _tagsRepository.CalculateTagsUsage();
         }
-        private List<Tag> GetTagsFromStackExchangeResponse(string data, ref long totalNumberOfTagsUse)
+        private List<Tag> GetTagsFromStackExchangeResponse(string data)
         {
             List<Tag> tags = new List<Tag>();
             JsonDocument jsonDocument = JsonDocument.Parse(data);
@@ -118,8 +114,6 @@ namespace SOTags.Services
             {
                 Tag tag = element.Deserialize<Tag>();
                 tags.Add(tag);
-                totalNumberOfTagsUse += tag.Count;
-                //Console.WriteLine($"Count {tag.Count} from tag {tag.Name}, total tags usage = {totalNumberOfTagsUse}");
             }
             return tags;
         }
