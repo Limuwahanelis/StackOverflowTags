@@ -23,6 +23,7 @@ namespace SOTags.Controllers
         [HttpGet]
         public ActionResult<PagedList<Tag>> GetTags([FromQuery] TagParemeters tagParemeters)
         {
+
             PagedList<Tag> tags = _tagDBService.GetTags(tagParemeters);
 
             var metadata = new

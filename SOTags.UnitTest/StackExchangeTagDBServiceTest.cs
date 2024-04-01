@@ -21,10 +21,11 @@ namespace SOTags.UnitTest
             data = System.IO.File.ReadAllText(absPath + "/Jsons/data.json");
             ITagsRepository tagsRepository = Substitute.For<ITagsRepository>();
             IStackExchangeService stackService = Substitute.For<IStackExchangeService>();
+
             stackService.GetPagedDataFromStackExchange(default, default).ReturnsForAnyArgs(data);
 
             StackExchangeTagDBService stackExchangeTagDBService = new StackExchangeTagDBService(tagsRepository,stackService);
-            await stackExchangeTagDBService.ImportTagsFromStackOverflow();
+            await stackExchangeTagDBService.ImportTagsFromStackOverflow(1);
             Assert.True(true);
         }
         [Fact]
@@ -35,10 +36,10 @@ namespace SOTags.UnitTest
             data = System.IO.File.ReadAllText(absPath + "/Jsons/data.json");
             ITagsRepository tagsRepository = Substitute.For<ITagsRepository>();
             IStackExchangeService stackService = Substitute.For<IStackExchangeService>();
+
             stackService.When(x => x.GetPagedDataFromStackExchange(default, default)).Do(x => { throw new StackExchangeServerCouldNotBeReachedException(); });
 
             StackExchangeTagDBService stackExchangeTagDBService = new StackExchangeTagDBService(tagsRepository, stackService);
-
             await Assert.ThrowsAsync<StackExchangeServerCouldNotBeReachedException>(() => stackService.GetPagedDataFromStackExchange(default, default));
         }
 
