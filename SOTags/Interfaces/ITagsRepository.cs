@@ -5,10 +5,9 @@ namespace SOTags.Interfaces
     public interface ITagsRepository
     {
         public void AddOrUpdateTagsToDatabase(List<Tag> tags);
-        public void CalculateTagsUsage(long totalNumberOfTagsUse);
-        public List<string?> GetTagsName(int pageSize, int lastId);
+        public List<string?> GetTagsName(int pageSize, int pageIndex);
         public int GetNumberOfTagsInDB();
-        public IQueryable<Tag> GetAllTags();
+        public List<Tag> GetTagsPaged(int pageSize, int pageNumber, TagSortingHelper.TagSortingType sort, bool isDescending, out int totalCount);
         void CalculateTagsUsage();
     }
 }

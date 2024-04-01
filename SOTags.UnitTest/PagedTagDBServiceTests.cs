@@ -20,7 +20,7 @@ namespace SOTags.UnitTest
     {
 
         [Fact]
-        public void GetTags_PageIsSize3DataIs5Size_RetrunsTrue()
+        public void GetTags_PageIsSize3DataIsBigger_RetrunsTrue()
         {
             string data;
             var absPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -31,41 +31,43 @@ namespace SOTags.UnitTest
                 new Tag {Name ="c#",Count=2,UsePercentage =50f},
                 new Tag {Name ="c++",Count=5, UsePercentage= 2f},
                 new Tag {Name ="java",Count=5,UsePercentage= 1f},
-                new Tag {Name ="dd",Count=5,UsePercentage= 60f}
-            }.AsQueryable();
-            tagsRepository.GetAllTags().Returns(testData);
+                new Tag {Name ="dd",Count=5,UsePercentage= 60f},
+                new Tag {Name ="ff",Count=5,UsePercentage= 60f}
+            };
             PagedTagDBService pagedTagDBService = new PagedTagDBService(tagsRepository);
             TagParemeters par = new TagParemeters()
             {
-                PageSize = 3
+                PageSize = 3,
             };
+            tagsRepository.GetTagsPaged(par.PageSize,par.PageNumber,TagSortingHelper.TagSortingType.ID,par.IsDescending,out Arg.Any<int>()).Returns(x => { x[4] = 10; return testData; });
             PagedList<Tag> tags = pagedTagDBService.GetTags(par);
-            Assert.Equal(3, tags.Count);
+            Assert.True(tags.HasNext);
         }
         [Fact]
-        public void GetTags_SortedByNameAscending_RetrunsTrue()
+        public void GetTags_SortedByNameAscending_RetrunsAbs()
         {
             ITagsRepository tagsRepository = Substitute.For<ITagsRepository>();
             var testData = new List<Tag>()
             {
+                new Tag {Name ="abs",Count=2,UsePercentage =50f},
                 new Tag {Name ="c#",Count=2,UsePercentage =50f},
                 new Tag {Name ="c++",Count=5, UsePercentage= 2f},
-                new Tag {Name ="abs",Count=2,UsePercentage =50f},
-                new Tag {Name ="java",Count=5,UsePercentage= 1f},
-                new Tag {Name ="dd",Count=5,UsePercentage= 60f}
-            }.AsQueryable();
-            tagsRepository.GetAllTags().Returns(testData);
+                new Tag {Name ="dd",Count=5,UsePercentage= 60f},
+                new Tag {Name ="java",Count=5,UsePercentage= 1f}
+            };
+            //tagsRepository.GetAllTags().Returns(testData);
             PagedTagDBService pagedTagDBService = new PagedTagDBService(tagsRepository);
             TagParemeters par = new TagParemeters()
             {
                 SortBy = "Name",
                 IsDescending = false,
             };
+            tagsRepository.GetTagsPaged(par.PageSize, par.PageNumber, TagSortingHelper.TagSortingType.NAME, par.IsDescending, out Arg.Any<int>()).Returns(x => { x[4] = 10; return testData; });
             PagedList<Tag> tags = pagedTagDBService.GetTags(par);
             Assert.Equal("abs", tags[0].Name);
         }
         [Fact]
-        public void GetTags_SortedByUsePercentageAscending_RetrunsTrue()
+        public void GetTags_DataIsBiggerThanPagePageIs3_RetrunHasPreviousTrue()
         {
             ITagsRepository tagsRepository = Substitute.For<ITagsRepository>();
             var testData = new List<Tag>()
@@ -75,16 +77,18 @@ namespace SOTags.UnitTest
                 new Tag {Name ="abs",Count=2,UsePercentage =50f},
                 new Tag {Name ="java",Count=5,UsePercentage= 1f},
                 new Tag {Name ="dd",Count=5,UsePercentage= 60f}
-            }.AsQueryable();
-            tagsRepository.GetAllTags().Returns(testData);
+            };
+            //tagsRepository.GetAllTags().Returns(testData);
             PagedTagDBService pagedTagDBService = new PagedTagDBService(tagsRepository);
             TagParemeters par = new TagParemeters()
             {
-                SortBy = "UsePercentage",
+                SortBy = "Name",
                 IsDescending = false,
+                PageNumber = 2,
             };
+            tagsRepository.GetTagsPaged(par.PageSize, par.PageNumber, TagSortingHelper.TagSortingType.NAME, par.IsDescending, out Arg.Any<int>()).Returns(x => { x[4] = 10; return testData; });
             PagedList<Tag> tags = pagedTagDBService.GetTags(par);
-            Assert.Equal(1, tags[0].UsePercentage);
+            Assert.True(tags.HasPrevious);
         }
     }
 }

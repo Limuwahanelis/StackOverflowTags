@@ -26,12 +26,8 @@ namespace SOTags.Repositories
             }
             _context.SaveChanges();
         }
-        public void UpdateTag(Tag oldTag,Tag newTag)
+        private void UpdateTag(Tag oldTag,Tag newTag)
         {
-            //if(oldTag.Count != newTag.Count)
-            //{
-            //    Console.WriteLine($"new tag differ by {newTag.Count - oldTag.Count}");
-            //}
             oldTag.Name = newTag.Name;
             oldTag.Count = newTag.Count;
         }
@@ -39,19 +35,11 @@ namespace SOTags.Repositories
         {
             return _context.Tags.Count();
         }
-        public List<string?> GetTagsName(int pageSize,int lastId)
+        public List<string?> GetTagsName(int pageSize,int pageIndex)
         {
             List<string?> toReturn;
-            toReturn = _context.Tags.OrderBy(t=>t.Id).Where(t=>t.Id>lastId).Take(pageSize).Select(t=>t.Name).ToList();
+            toReturn = _context.Tags.OrderBy(t=>t.Count).Skip(pageSize* pageIndex).Take(pageSize).Select(t=>t.Name).ToList();
             return toReturn;
-        }
-        public void CalculateTagsUsage(long totalNumberOfTagsUse)
-        {
-            foreach (var tag in _context.Tags)
-            {
-                tag.UsePercentage = float.Round(100f * tag.Count / totalNumberOfTagsUse, 2);
-            }
-            _context.SaveChanges();
         }
         public void CalculateTagsUsage()
         {
@@ -67,11 +55,21 @@ namespace SOTags.Repositories
             _context.SaveChanges();
             Log.Information("{totaltagsCount} tags count in repo", totalNumberOfTagsUse);
         }
-        public IQueryable<Tag> GetAllTags()
+        public List<Tag> GetTagsPaged(int pageSize, int pageNumber,TagSortingHelper.TagSortingType sort,bool isDescending,out int totalCount)
         {
-            var tags = from t in _context.Tags
-                       select t;
-            return tags;
+            List<Tag> toReturn;
+            totalCount = GetNumberOfTagsInDB();
+            int TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+            switch (sort)
+            {
+                case TagSortingHelper.TagSortingType.USE_PERCENTAGE: orderByFunc = tag => tag.UsePercentage;break;
+                case TagSortingHelper.TagSortingType.NAME: orderByFunc = tag => tag.Name; break;
+                case TagSortingHelper.TagSortingType.ID: orderByFunc = tag => tag.Id; break;
+            }
+               
+            toReturn = (isDescending?_context.Tags.AsNoTracking().OrderByDescending(orderByFunc):_context.Tags.OrderBy(orderByFunc)).Skip(pageSize*(pageNumber-1)).Take(pageSize).ToList();
+            return toReturn;
         }
+        Func<Tag, Object> orderByFunc = null;
     }
 }

@@ -18,19 +18,22 @@ namespace SOTags.Services
         public PagedList<Tag> GetTags(TagParemeters tagParemeters)
         {
             PagedList<Tag> pagedTags;
-            var tags = _repository.GetAllTags();
+            TagSortingHelper.TagSortingType tagSorting=TagSortingHelper.TagSortingType.ID;
             if (!string.IsNullOrWhiteSpace(tagParemeters.SortBy))
             {
+                
                 if (tagParemeters.SortBy.Equals("UsePercentage", StringComparison.OrdinalIgnoreCase))
                 {
-                    tags = tagParemeters.IsDescending ? tags.OrderByDescending(t => t.UsePercentage) : tags.OrderBy(t => t.UsePercentage);
+                    tagSorting = TagSortingHelper.TagSortingType.USE_PERCENTAGE;
                 }
                 else if (tagParemeters.SortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
                 {
-                    tags = tagParemeters.IsDescending ? tags.OrderByDescending(t => t.Name) : tags.OrderBy(t => t.Name);
+                    tagSorting = TagSortingHelper.TagSortingType.NAME;
                 }
             }
-            pagedTags = PagedList<Tag>.ToPagedList(tags.AsNoTracking(), tagParemeters.PageNumber, tagParemeters.PageSize);
+            List<Tag> tags = _repository.GetTagsPaged(tagParemeters.PageSize, tagParemeters.PageNumber, tagSorting, tagParemeters.IsDescending, out int totalCount);
+
+            pagedTags = PagedList<Tag>.ToPagedList(tags,totalCount,tagParemeters.PageNumber, tagParemeters.PageSize);
             return pagedTags;
         }
 
