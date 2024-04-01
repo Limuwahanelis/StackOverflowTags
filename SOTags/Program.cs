@@ -6,6 +6,7 @@ using SOTags.Interfaces;
 using SOTags.Repositories;
 using SOTags.Services;
 using Serilog;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,27 @@ Log.Logger = new LoggerConfiguration()
 
 //builder.Logging.ClearProviders();
 // Add services to the container.
+//builder.Services.AddHttpClient().ConfigureHttpClientDefaults(s =>
+//{
+//    s.ConfigurePrimaryHttpMessageHandler(handler =>
+//    new HttpClientHandler
+//    {
+//        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+//        UseCookies = false,
+//        AllowAutoRedirect = false,
+//        UseDefaultCredentials = true,
+//    });
+//});
+builder.Services.AddHttpClient<IStackExchangeService,StackExchangeService>().ConfigurePrimaryHttpMessageHandler(handler =>
+    new HttpClientHandler
+    {
+        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+        UseCookies = false,
+        AllowAutoRedirect = false,
+        UseDefaultCredentials = true,
+    });
+
+
 builder.Services.AddTransient<IStackExchangeService,StackExchangeService>();
 builder.Services.AddDbContext<SOTagsDBContext>();
 builder.Services.AddTransient<PagedTagDBService>();
@@ -33,14 +55,13 @@ builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
-APIHelper.SetUP();
 using (var serviceScope = app.Services.CreateScope())
 {
     var services = serviceScope.ServiceProvider;
     StackExchangeTagDBService stackExchangeTagDBService = services.GetRequiredService<StackExchangeTagDBService>();
     try
     {
-        await stackExchangeTagDBService.ImportTagsFromStackOverflow(1000);
+        await stackExchangeTagDBService.ImportTagsFromStackOverflow();
     }
     catch (StackExchangeServerCouldNotBeReachedException e) 
     {
