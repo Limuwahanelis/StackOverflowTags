@@ -25,5 +25,11 @@
             var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
             return new PagedList<T>(items, count, pageNumber, pageSize);
         }
+        public static PagedList<T> ToPagedList(List<T> source,int totalCount, int pageNumber, int pageSize)
+        {
+            var count = totalCount;
+            var items = source;
+            return new PagedList<T>(items, count, pageNumber, pageSize);
+        }
     }
 }
