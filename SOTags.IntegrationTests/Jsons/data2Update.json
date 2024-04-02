@@ -1,0 +1,119 @@
+{
+  "items": [
+    {
+      "synonyms": [
+        "iphone-os",
+        "apple-ios",
+        "ios-sdk"
+      ],
+      "count": 687221,
+      "name": "ios"
+    },
+    {
+      "synonyms": [
+        "sql-query",
+        "sql-statement",
+        "sql-syntax",
+        "sql-select",
+        "sqlselect",
+        "select-statement",
+        "sql-or",
+        "sql-and",
+        "sql-standards"
+      ],
+      "count": 670745,
+      "name": "sql"
+    },
+    {
+      "synonyms": [
+        "my-sql",
+        "mysql-query",
+        "mysql-server",
+        "mysql-table",
+        "mysqld",
+        "mysqlclient",
+        "mysqldump",
+        "mysqlsh",
+        "mysql-if"
+      ],
+      "count": 661987,
+      "name": "mysql"
+    },
+    {
+      "synonyms": [
+        "rstats",
+        "r-language",
+        "base-r"
+      ],
+      "count": 505580,
+      "name": "r"
+    },
+    {
+      "synonyms": [
+        "react",
+        "react-jsx",
+        "react.js",
+        "react-component"
+      ],
+      "count": 476584,
+      "name": "reactjs"
+    },
+    {
+      "synonyms": [
+        "nodejs",
+        "io.js"
+      ],
+      "count": 471962,
+      "name": "node.js"
+    },
+    {
+      "synonyms": [
+        "array",
+        "array-of-objects",
+        "javascript-array",
+        "jsonarray",
+        "string-array",
+        "char-array",
+        "mongodb-arrays",
+        "sub-arrays",
+        "character-arrays",
+        "swift-array",
+        "static-array",
+        "bytearray",
+        "arraycopy",
+        "arrayofstring",
+        "chararray",
+        "array-of-dict"
+      ],
+      "count": 416698,
+      "name": "arrays"
+    },
+    {
+      "count": 403939,
+      "name": "c"
+    },
+    {
+      "synonyms": [
+        "asp-net",
+        "aspx",
+        "asp.net-website",
+        "aspdotnet"
+      ],
+      "count": 374603,
+      "name": "asp.net"
+    },
+    {
+      "synonyms": [
+        "json-parsing",
+        "json-encode",
+        "json-decode",
+        "jsonobject"
+      ],
+      "count": 360328,
+      "name": "json"
+    }
+  ],
+  "has_more": false,
+  "quota_max": 10000,
+  "quota_remaining": 9986
+}

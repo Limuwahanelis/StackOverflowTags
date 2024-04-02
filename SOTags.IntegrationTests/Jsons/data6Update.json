@@ -1,0 +1,87 @@
+{
+  "items": [
+    {
+      "synonyms": [
+        "xcode-ide"
+      ],
+      "count": 159629,
+      "name": "xcode"
+    },
+    {
+      "synonyms": [
+        "aws"
+      ],
+      "count": 158382,
+      "name": "amazon-web-services"
+    },
+    {
+      "synonyms": [
+        "bash-script",
+        "bashrc",
+        ".bashrc",
+        "bash-alias",
+        "bash-variables",
+        ".bash-profile",
+        "bash-function"
+      ],
+      "count": 155634,
+      "name": "bash"
+    },
+    {
+      "synonyms": [
+        "git-commands"
+      ],
+      "count": 152197,
+      "name": "git"
+    },
+    {
+      "count": 151498,
+      "name": "oracle"
+    },
+    {
+      "count": 148005,
+      "name": "spring-boot"
+    },
+    {
+      "synonyms": [
+        "data-frame",
+        "dataframes",
+        "data.frame",
+        "r-df",
+        "pandas-df",
+        "df"
+      ],
+      "count": 145945,
+      "name": "dataframe"
+    },
+    {
+      "synonyms": [
+        "firebase-android"
+      ],
+      "count": 143267,
+      "name": "firebase"
+    },
+    {
+      "synonyms": [
+        "lists",
+        "ilist",
+        "python-list",
+        "list-comparison",
+        "generic-list"
+      ],
+      "count": 141564,
+      "name": "list"
+    },
+    {
+      "synonyms": [
+        "vbproj",
+        "vb"
+      ],
+      "count": 140262,
+      "name": "vb.net"
+    }
+  ],
+  "has_more": false,
+  "quota_max": 10000,
+  "quota_remaining": 9965
+}

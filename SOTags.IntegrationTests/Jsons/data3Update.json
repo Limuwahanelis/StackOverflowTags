@@ -1,0 +1,91 @@
+{
+  "items": [
+    {
+      "synonyms": [
+        "python-3",
+        "py3k",
+        "python3k",
+        "python3",
+        "py3"
+      ],
+      "count": 343620,
+      "name": "python-3.x"
+    },
+    {
+      "synonyms": [
+        "rails",
+        "ror"
+      ],
+      "count": 338046,
+      "name": "ruby-on-rails"
+    },
+    {
+      "synonyms": [
+        "dotnet",
+        "dot-net",
+        ".net-framework"
+      ],
+      "count": 337862,
+      "name": ".net"
+    },
+    {
+      "synonyms": [
+        "mssql",
+        "ms-sql-server",
+        "sql-srever"
+      ],
+      "count": 334517,
+      "name": "sql-server"
+    },
+    {
+      "synonyms": [
+        "swift-language",
+        "swift-ios",
+        "swift1.2"
+      ],
+      "count": 333387,
+      "name": "swift"
+    },
+    {
+      "count": 311796,
+      "name": "django"
+    },
+    {
+      "synonyms": [
+        "angular2",
+        "angular4",
+        "angular4.x",
+        "angularjs2"
+      ],
+      "count": 304087,
+      "name": "angular"
+    },
+    {
+      "synonyms": [
+        "objc"
+      ],
+      "count": 292326,
+      "name": "objective-c"
+    },
+    {
+      "synonyms": [
+        "pandas-1.x",
+        "pandas-2.x"
+      ],
+      "count": 286634,
+      "name": "pandas"
+    },
+    {
+      "synonyms": [
+        "ms-excel",
+        "workbook",
+        "excel-macro"
+      ],
+      "count": 286456,
+      "name": "excel"
+    }
+  ],
+  "has_more": false,
+  "quota_max": 10000,
+  "quota_remaining": 9985
+}

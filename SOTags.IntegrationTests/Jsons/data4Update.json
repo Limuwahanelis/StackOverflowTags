@@ -1,0 +1,90 @@
+{
+  "items": [
+    {
+      "synonyms": [
+        "angular.js",
+        "angular1.x"
+      ],
+      "count": 262748,
+      "name": "angularjs"
+    },
+    {
+      "synonyms": [
+        "regexp",
+        "regular-expression",
+        "regular-expressions",
+        "regexes",
+        "regex-php",
+        "perl-regex",
+        "perlre",
+        "regularexpression",
+        "apache-regexp",
+        "sql-regex"
+      ],
+      "count": 260245,
+      "name": "regex"
+    },
+    {
+      "synonyms": [
+        "atscript",
+        "vanilla-typescript"
+      ],
+      "count": 229719,
+      "name": "typescript"
+    },
+    {
+      "count": 229042,
+      "name": "ruby"
+    },
+    {
+      "synonyms": [
+        "linux-development"
+      ],
+      "count": 227459,
+      "name": "linux"
+    },
+    {
+      "synonyms": [
+        ".ajax",
+        "ajax-request"
+      ],
+      "count": 222022,
+      "name": "ajax"
+    },
+    {
+      "synonyms": [
+        "iphone-sdk",
+        "iphone-development",
+        "iphone-app",
+        "iphone-programming",
+        "iphone-ios",
+        "iphone-web"
+      ],
+      "count": 220724,
+      "name": "iphone"
+    },
+    {
+      "synonyms": [
+        "xml-file"
+      ],
+      "count": 214669,
+      "name": "xml"
+    },
+    {
+      "synonyms": [
+        "visual-basic-applications",
+        "vba-macros",
+        "macros-vba"
+      ],
+      "count": 214027,
+      "name": "vba"
+    },
+    {
+      "count": 211408,
+      "name": "laravel"
+    }
+  ],
+  "has_more": false,
+  "quota_max": 10000,
+  "quota_remaining": 9967
+}

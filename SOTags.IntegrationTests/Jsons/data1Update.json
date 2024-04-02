@@ -1,0 +1,192 @@
+{
+  "items": [
+    {
+      "synonyms": [
+        "js",
+        "ecmascript",
+        ".js",
+        "javascript-execution",
+        "classic-javascript",
+        "javascript-alert",
+        "javascript-dom",
+        "javascript-disabled",
+        "javascript-library",
+        "javascript-runtime",
+        "vanilla-javascript",
+        "javascript-module",
+        "vanilla-js",
+        "vanillajs"
+      ],
+      "count": 2528729,
+      "name": "javascript"
+    },
+    {
+      "synonyms": [
+        "pythonic",
+        "python-interpreter",
+        "python-shell",
+        "py"
+      ],
+      "count": 2192118,
+      "name": "python"
+    },
+    {
+      "synonyms": [
+        "java-se",
+        ".java",
+        "j2se",
+        "core-java",
+        "jdk",
+        "jre",
+        "java-libraries",
+        "oraclejdk",
+        "openjdk",
+        "javax",
+        "java-api"
+      ],
+      "count": 1917197,
+      "name": "java"
+    },
+    {
+      "synonyms": [
+        "c-sharp",
+        "c#.net",
+        "c#-language",
+        "visual-c#",
+        "csharp",
+        ".cs-file"
+      ],
+      "count": 1614979,
+      "name": "c#"
+    },
+    {
+      "synonyms": [
+        "php-oop",
+        "php-date",
+        "php5",
+        "php-frameworks",
+        "hypertext-preprocessor",
+        "php.ini",
+        "php-cli",
+        "php-errors",
+        "php-mail",
+        "php-cgi",
+        "php-functions",
+        "php-session",
+        "php-fpm",
+        "phtml",
+        "php-include",
+        "php-namespaces",
+        "phpinfo"
+      ],
+      "count": 1464385,
+      "name": "php"
+    },
+    {
+      "synonyms": [
+        "android-mobile",
+        "android-sdk",
+        "android-api",
+        "android-device",
+        "android-application",
+        "android-ui",
+        "android-framework"
+      ],
+      "count": 1417129,
+      "name": "android"
+    },
+    {
+      "synonyms": [
+        "html-tag",
+        "html-attributes",
+        "div",
+        "divs",
+        "nested-divs",
+        "div-layouts",
+        "html-comments",
+        "span",
+        "webpage",
+        "html5",
+        "time-tag",
+        "html-head",
+        "html-syntax"
+      ],
+      "count": 1187254,
+      "name": "html"
+    },
+    {
+      "synonyms": [
+        "jquery-core",
+        "jquery-live",
+        "addclass",
+        "toggleclass",
+        "removeclass",
+        "jquery-after",
+        "jquery-callback",
+        "jquery-get",
+        "jquery-post",
+        "jquery-find",
+        "jquery-css",
+        "jquery-hasclass",
+        "jquery-filter",
+        "jquery-effects"
+      ],
+      "count": 1034781,
+      "name": "jquery"
+    },
+    {
+      "synonyms": [
+        "cpp",
+        "cxx"
+      ],
+      "count": 806732,
+      "name": "c++"
+    },
+    {
+      "synonyms": [
+        "cascading-style-sheet",
+        "css-layout",
+        "css-background-image",
+        "css-attributes",
+        "css-classes",
+        "css-height",
+        "css-columns",
+        "css2",
+        "css-inheritance",
+        "css-centering",
+        "min-height",
+        "min-width",
+        "max-height",
+        "max-width",
+        "box-model",
+        "css-validation",
+        "style.css-template-file",
+        "css-display",
+        "css-line-height",
+        "css-overflow",
+        "alternate-stylesheets",
+        "inline-block",
+        "css-box-model",
+        "font-weight",
+        "css-menu",
+        "css-reset",
+        "dynamic-css",
+        "css-borders",
+        "css-font-weight",
+        "css-border-image",
+        "css-border-radius",
+        "css-box-shadow",
+        "css-text-shadow",
+        "css3",
+        "css-text-overflow",
+        "box-sizing",
+        "box-shadow"
+      ],
+      "count": 804178,
+      "name": "css"
+    }
+  ],
+  "has_more": false,
+  "quota_max": 10000,
+  "quota_remaining": 9987
+}

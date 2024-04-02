@@ -1,0 +1,87 @@
+{
+  "items": [
+    {
+      "synonyms": [
+        "loop",
+        "looping",
+        "iterate"
+      ],
+      "count": 96404,
+      "name": "loops"
+    },
+    {
+      "synonyms": [
+        "express.js",
+        "expressjs"
+      ],
+      "count": 95499,
+      "name": "express"
+    },
+    {
+      "count": 95237,
+      "name": "python-2.7"
+    },
+    {
+      "count": 95154,
+      "name": "kotlin"
+    },
+    {
+      "count": 95022,
+      "name": "hibernate"
+    },
+    {
+      "synonyms": [
+        "matlab-ide",
+        "matlab-path",
+        "matlab-toolbox",
+        "mlint",
+        "m-file"
+      ],
+      "count": 94904,
+      "name": "matlab"
+    },
+    {
+      "synonyms": [
+        "sqllite",
+        "sqlitedatabase",
+        "sqlite3"
+      ],
+      "count": 94834,
+      "name": "sqlite"
+    },
+    {
+      "synonyms": [
+        "dart-sdk",
+        "dart-null-safety"
+      ],
+      "count": 93741,
+      "name": "dart"
+    },
+    {
+      "synonyms": [
+        "restful",
+        "restful-web-services",
+        "restful-architecture",
+        "rest-api",
+        "restapi"
+      ],
+      "count": 93178,
+      "name": "rest"
+    },
+    {
+      "synonyms": [
+        "shell-script",
+        "shell-scripting",
+        "shell-command",
+        "shell-commands",
+        "shellscript",
+        "shell-trap"
+      ],
+      "count": 92644,
+      "name": "shell"
+    }
+  ],
+  "has_more": false,
+  "quota_max": 10000,
+  "quota_remaining": 9962
+}
