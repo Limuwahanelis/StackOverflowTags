@@ -1,0 +1,100 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Sample API
+  description: Description of API of TagDBController
+paths:
+  /TagDB:
+    get:
+      summary: Returns tags in a database
+      parameters:
+        - name: PageNumber
+          in: query
+          description: Specifies the page number of sorted tags
+          schema:
+            type: integer
+        - name: PageSize
+          in: query
+          description: Limits number of items on a page
+          schema:
+            type: integer
+        - name: SortBy
+          in: query
+          description: Sorting condition of requested tags
+          schema:
+            type: string
+            enum: [UsePercentage,Name]
+        - name: IsDescending
+          in: query
+          description: Is sorting order descending
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Successfully returned a list of tags
+          headers:
+            X-Pagination-TotalCount:
+              schema:
+                type: integer
+              description: Total number of Tags in a database
+            X-Pagination-PageSize:
+              schema:
+                type: integer
+              description: Number of tags on a page
+            X-Pagination-CurrentPage:
+              schema:
+                type: integer
+              description: Index of current Page
+            X-Pagination-TotalPages:
+              schema:
+                type: integer
+              description: Total number of pages
+            X-Pagination-HasNext:
+              schema:
+                type: boolean
+              description: Does next page of tags exists
+            X-Pagination-HasPrevious:
+              schema:
+                type: boolean
+              description: Does previous page of tags exists
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                 $ref: '#/components/schemas/Tag'
+  /TagDB/Import:
+    get:
+      description: Import tags to database from stackoverflow
+      responses:
+        '200':
+          description: Sucessfuly import tags
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Tags could not be imported from stackoverflow
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    Tag:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: integer
+        count:
+          type: integer
+        usePercentage:
+          type: number
