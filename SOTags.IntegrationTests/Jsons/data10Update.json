@@ -1,0 +1,95 @@
+{
+  "items": [
+    {
+      "synonyms": [
+        "httpd"
+      ],
+      "count": 92453,
+      "name": "apache"
+    },
+    {
+      "synonyms": [
+        "ef",
+        "linq-entity-framework",
+        "entity-framework-mapping",
+        "fluent-entity-framework",
+        "entity-framework-designer",
+        "sql-to-entity-framework"
+      ],
+      "count": 91796,
+      "name": "entity-framework"
+    },
+    {
+      "synonyms": [
+        "androidstudio-settings"
+      ],
+      "count": 90561,
+      "name": "android-studio"
+    },
+    {
+      "synonyms": [
+        ".csv",
+        "comma-separated",
+        "tsv",
+        "tab-delimited",
+        "tab-delimited-text",
+        "delimited-text",
+        "delimiter-separated-values"
+      ],
+      "count": 90247,
+      "name": "csv"
+    },
+    {
+      "synonyms": [
+        "mvn"
+      ],
+      "count": 88629,
+      "name": "maven"
+    },
+    {
+      "synonyms": [
+        "language-integrated-query",
+        "linq-query-syntax"
+      ],
+      "count": 86472,
+      "name": "linq"
+    },
+    {
+      "synonyms": [
+        "dict",
+        "dictionaries",
+        "map"
+      ],
+      "count": 86048,
+      "name": "dictionary"
+    },
+    {
+      "count": 86003,
+      "name": "qt"
+    },
+    {
+      "synonyms": [
+        "facebook-api",
+        "facebook-sdk",
+        "facebook-application",
+        "facebook-connect",
+        "facebook-sdk-ios",
+        "fbconnect"
+      ],
+      "count": 85652,
+      "name": "facebook"
+    },
+    {
+      "synonyms": [
+        "unit-test",
+        "unit-tests",
+        "unittest"
+      ],
+      "count": 85395,
+      "name": "unit-testing"
+    }
+  ],
+  "has_more": false,
+  "quota_max": 10000,
+  "quota_remaining": 9948
+}
