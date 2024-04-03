@@ -23,7 +23,7 @@ namespace SOTags.UnitTest.Tests
         string dataPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         [Fact]
-        public async void ImportTagsFromStackOverflow_CorrectlyImportData_AssertTrue()
+        public async void ImportTagsFromMockedStackOverflow_CorrectlyImportData_AssertTrue()
         {
             SetUp(out string data);
             ITagsRepository tagsRepository = Substitute.For<ITagsRepository>();

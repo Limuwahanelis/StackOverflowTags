@@ -1,4 +1,6 @@
-﻿using SharpYaml;
+﻿using Humanizer;
+using Microsoft.CodeAnalysis.Text;
+using SharpYaml;
 using SOTags.CustomDataFormats;
 using SOTags.IntegrationTests.Architecture;
 using SOTags.Model;
@@ -10,16 +12,19 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 using WireMock.Server;
+using static Google.Protobuf.Reflection.FieldDescriptorProto;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace SOTags.IntegrationTests.Tests
 {
     public class TagDBControllerTests
     {
         [Fact]
-        public async void GetTags_ReturnsTags()
+        public async void GetTags_ReturnsTags_AssertNotNull()
         {
             TestHttpClientFactory httpFactory = new TestHttpClientFactory();
             var application = new SOTagsWebApplicationFactory(httpFactory);
@@ -32,44 +37,36 @@ namespace SOTags.IntegrationTests.Tests
             httpFactory.Dispose();
         }
         [Fact]
-        public async void dd()
+        public async void GetTags_ImportTags_AssertSuccessfulResponse()
         {
-            WireMockServer server;
-            HttpClient client;
-            server = WireMockServer.Start(5555);
-            var absPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string responseData = File.ReadAllText(absPath + $"/Jsons/data{1}.json");
-            server.Given(Request.Create()
-                .UsingGet()
-                .WithPath("/tags")
-                .WithParam("pageSize", "200")
-                .WithParam("pageNumber", "1")
-                ).RespondWith(Response.Create()
-                .WithStatusCode(System.Net.HttpStatusCode.OK)
-                .WithBody(responseData));
-            client = server.CreateClient();
+            TestHttpClientFactory httpFactory = new TestHttpClientFactory();
+            var application = new SOTagsWebApplicationFactory(httpFactory);
 
-            var response = await client.GetAsync("/tags?pageNumber=1&pageSize=200");
-            string data = await response.Content.ReadAsStringAsync();
+            var client = application.CreateClient();
+            var response = await client.GetAsync("/TagDB/Import");
+            string content = await response.Content.ReadAsStringAsync();
+            response.EnsureSuccessStatusCode();
+            Assert.True(response.IsSuccessStatusCode);
 
-
+            httpFactory.Dispose();
         }
-        //[Fact]
-        //public async void GetTags_ImportTags()
-        //{
-        //    //_server = WireMockServer.Start();
-        //    //_server.gi
-        //    var application = new SOTagsWebApplicationFactory();
+        [Fact]
+        public async void GetTags_ImportTags_AssertUnsucessfulResponseAndMessageContent()
+        {
+            UnsucessfulResponsClientFactory httpFactory = new UnsucessfulResponsClientFactory();
+            var application = new SOTagsWebApplicationFactory(httpFactory);
 
-        //    var client = application.CreateClient();
-        //    var response = await client.GetAsync("/TagDB/Update");
-        //    string content = await response.Content.ReadAsStringAsync();
-        //    response.EnsureSuccessStatusCode();
-        //    Assert.True(response.IsSuccessStatusCode);
-        //}
+            var client = application.CreateClient();
+            var response = await client.GetAsync("/TagDB/Import");
+            string content = await response.Content.ReadAsStringAsync();
 
+            Assert.Equal("An problem occured when reaching Stack Exchange server. Message from server:"+
+            " \nManaged to Imported or updated 40 tags from required 100 entries", content);
+            Assert.True(!response.IsSuccessStatusCode);
 
-
+            httpFactory.Dispose();
+        }
+        
         private List<Tag> GetTagsFromResponse(string data)
         {
             List<Tag> tags = new List<Tag>();
@@ -77,8 +74,8 @@ namespace SOTags.IntegrationTests.Tests
             JsonElement tagsList = jsonDocument.RootElement;
             foreach (JsonElement element in tagsList.EnumerateArray())
             {
-                Tag tag = element.Deserialize<Tag>();
-                tags.Add(tag);
+                Tag? tag = element.Deserialize<Tag>();
+                if(tag!=null) tags.Add(tag);
             }
             return tags;
         }
