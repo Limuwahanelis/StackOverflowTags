@@ -6,7 +6,7 @@ namespace SOTags.Model
     {
         public int Id { get; set; }
         [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        public string Name { get; set; } = "";
         [JsonPropertyName("count")]
         public int Count { get; set; }
         public float UsePercentage { get; set; }
