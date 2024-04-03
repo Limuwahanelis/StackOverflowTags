@@ -69,6 +69,7 @@ namespace SOTags.Repositories
             List<Tag> toReturn;
             totalCount = GetNumberOfTagsInDB();
             int TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+            orderByFunc = tag => tag.Id;
             switch (sort)
             {
                 case TagSortingHelper.TagSortingType.USE_PERCENTAGE: orderByFunc = tag => tag.UsePercentage;break;
@@ -79,6 +80,6 @@ namespace SOTags.Repositories
             toReturn = (isDescending?_context.Tags.AsNoTracking().OrderByDescending(orderByFunc):_context.Tags.OrderBy(orderByFunc)).Skip(pageSize*(pageNumber-1)).Take(pageSize).ToList();
             return toReturn;
         }
-        Func<Tag, Object> orderByFunc=null;
+        Func<Tag, Object>? orderByFunc;
     }
 }
