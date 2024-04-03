@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using SOTags.CustomDataFormats;
 using SOTags.Data;
+using SOTags.Exceptions;
 using SOTags.Model;
 using SOTags.Services;
 using System.Text.Json;
@@ -40,10 +43,20 @@ namespace SOTags.Controllers
 
             return Ok(tags);
         }
-        [HttpGet("Update")]
-        public async Task<ActionResult> UpdateTagsDB()
+        [HttpGet("Import")]
+        public async Task<IActionResult> ImportTagsDB()
         {
-           await _stackExchangeTagDBService.UpdateTagsInDB();
+            try
+            {
+                await _stackExchangeTagDBService.ImportTagsFromStackOverflow();
+            }
+            catch (StackExchangeServerCouldNotBeReachedException ex)
+            {
+                string message = $"An problem occured when reaching Stack Exchange server. Message from server: {ex.StackExchangeSetverMessage}\n" +
+                $"Managed to {ex.OperationMessage}";
+                Log.Error("{message}", message);
+                return BadRequest(message);
+            }
 
            return Ok("Updated");
         }
