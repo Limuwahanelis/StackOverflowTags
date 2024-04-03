@@ -29,7 +29,7 @@ namespace SOTags.Repositories
                 else
                 {
                     _context.Tags.Add(tag);
-                    Log.Information("Added new tag {tagName} with count {tagCount}", tag.Name, tag.Count);
+                    Log.Debug("Added new tag {tagName} with count {tagCount}", tag.Name, tag.Count);
                 }
             }
             _context.SaveChanges();
@@ -37,7 +37,7 @@ namespace SOTags.Repositories
         private void UpdateTag(Tag oldTag,Tag newTag)
         {
             oldTag.Name = newTag.Name;
-            Log.Information("Updated {oldtag} count from {oldCount} to {newCount}", oldTag.Name, oldTag.Count, newTag.Count);
+            Log.Debug("Updated {oldtag} count from {oldCount} to {newCount}", oldTag.Name, oldTag.Count, newTag.Count);
             oldTag.Count = newTag.Count;
         }
         public int GetNumberOfTagsInDB()

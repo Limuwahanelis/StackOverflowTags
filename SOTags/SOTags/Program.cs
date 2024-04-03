@@ -9,12 +9,14 @@ using Serilog;
 using System.Net;
 using Microsoft.Extensions.Http;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
-    .WriteTo.Console()
+    .WriteTo.File("log-.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
     .CreateLogger();
 
 //builder.Logging.ClearProviders();
@@ -66,7 +68,7 @@ using (var serviceScope = app.Services.CreateScope())
     {
         await stackExchangeTagDBService.ImportTagsFromStackOverflow();
     }
-    catch (StackExchangeServerCouldNotBeReachedException e) 
+    catch (StackExchangeServerCouldNotBeReachedException e)
     {
         Log.Logger.Fatal($"An problem occured when reaching Stack Exchange server. Message from server: {e.StackExchangeSetverMessage}\n" +
                 $"Managed to {e.OperationMessage}");
