@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SOTags", "SOTags.csproj", "{662011A7-6EF6-4445-806C-B3385EAB9904}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SOTags", "SOTags\SOTags.csproj", "{662011A7-6EF6-4445-806C-B3385EAB9904}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SOTags.UnitTest", "..\SOTags.UnitTest\SOTags.UnitTest.csproj", "{5DA76E76-F833-4AB0-BC89-ED2DADABF31F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{662011A7-6EF6-4445-806C-B3385EAB9904} = {662011A7-6EF6-4445-806C-B3385EAB9904}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SOTags.IntegrationTests", "..\SOTags.IntegrationTests\SOTags.IntegrationTests.csproj", "{4D517EF9-BFB8-43A8-9FC2-07404A43AF58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SOTags.IntegrationTests", "..\SOTags.IntegrationTests\SOTags.IntegrationTests.csproj", "{4D517EF9-BFB8-43A8-9FC2-07404A43AF58}"
 	ProjectSection(ProjectDependencies) = postProject
 		{662011A7-6EF6-4445-806C-B3385EAB9904} = {662011A7-6EF6-4445-806C-B3385EAB9904}
 	EndProjectSection
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{22D7D2FA-B22B-49FE-992F-82C4D02E64A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{4D517EF9-BFB8-43A8-9FC2-07404A43AF58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D517EF9-BFB8-43A8-9FC2-07404A43AF58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D517EF9-BFB8-43A8-9FC2-07404A43AF58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22D7D2FA-B22B-49FE-992F-82C4D02E64A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22D7D2FA-B22B-49FE-992F-82C4D02E64A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22D7D2FA-B22B-49FE-992F-82C4D02E64A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22D7D2FA-B22B-49FE-992F-82C4D02E64A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  SqlServerDb:
+        container_name: SqlServerContainer
+        image: mcr.microsoft.com/mssql/server:2017-latest
+        ports:
+            - 8002:1433
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=myStong_Password123# 
+  sotags:
+    image: ${DOCKER_REGISTRY-}sotags
+    ports:
+     - 8001:80
+    build:
+      context: SOTags
+      dockerfile: Dockerfile
+    depends_on:
+    - SqlServerDb

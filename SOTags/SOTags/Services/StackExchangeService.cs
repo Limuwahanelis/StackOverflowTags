@@ -20,13 +20,16 @@ namespace SOTags.Services
             _configuration = configuration;
             filter = _configuration.GetValue<string>("StackExchangeServer:Filter");
             client = httpClient;
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public async Task<string> GetTagsInfoFromStackExchange(int pageSize, string tagsUrl)
         {
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
+            //client.DefaultRequestHeaders.Accept.Clear();
+            //client.DefaultRequestHeaders.Accept.Add(
+            //new MediaTypeWithQualityHeaderValue("application/json"));
             string path = _configuration.GetValue<string>("StackExchangeServer:Address") + $"tags/{tagsUrl}/info?pagesize={pageSize}&order=desc&sort=popular&site=stackoverflow&filter={filter}";
             string data = "";
             HttpResponseMessage response = await client.GetAsync(path);
@@ -45,9 +48,7 @@ namespace SOTags.Services
         }
         public async Task<string> GetPagedDataFromStackExchange(int pageSize, int pageIndex)
         {
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
+
             string path = _configuration.GetValue<string>("StackExchangeServer:Address") + $"tags?page={pageIndex}&pagesize={pageSize}&order=desc&sort=popular&site=stackoverflow&filter={filter}";
             string data = "";
             HttpResponseMessage response = await client.GetAsync(path);

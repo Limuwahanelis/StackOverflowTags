@@ -7,6 +7,8 @@ using SOTags.Repositories;
 using SOTags.Services;
 using Serilog;
 using System.Net;
+using Microsoft.Extensions.Http;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,18 +19,9 @@ Log.Logger = new LoggerConfiguration()
 
 //builder.Logging.ClearProviders();
 // Add services to the container.
-//builder.Services.AddHttpClient().ConfigureHttpClientDefaults(s =>
-//{
-//    s.ConfigurePrimaryHttpMessageHandler(handler =>
-//    new HttpClientHandler
-//    {
-//        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
-//        UseCookies = false,
-//        AllowAutoRedirect = false,
-//        UseDefaultCredentials = true,
-//    });
-//});
-builder.Services.AddHttpClient<IStackExchangeService,StackExchangeService>().ConfigurePrimaryHttpMessageHandler(handler =>
+builder.Services.AddHttpClient().ConfigureHttpClientDefaults(s =>
+{
+    s.ConfigurePrimaryHttpMessageHandler(handler =>
     new HttpClientHandler
     {
         AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
@@ -36,6 +29,16 @@ builder.Services.AddHttpClient<IStackExchangeService,StackExchangeService>().Con
         AllowAutoRedirect = false,
         UseDefaultCredentials = true,
     });
+});
+builder.Services.AddHttpClient<IStackExchangeService, StackExchangeService>().ConfigurePrimaryHttpMessageHandler(handler =>
+    new HttpClientHandler
+    {
+        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+        UseCookies = false,
+        AllowAutoRedirect = false,
+        UseDefaultCredentials = true,
+    });
+builder.Services.RemoveAll<IHttpMessageHandlerBuilderFilter>();
 
 
 builder.Services.AddTransient<IStackExchangeService,StackExchangeService>();
@@ -67,7 +70,6 @@ using (var serviceScope = app.Services.CreateScope())
     {
         Log.Logger.Fatal($"An problem occured when reaching Stack Exchange server. Message from server: {e.StackExchangeSetverMessage}\n" +
                 $"Managed to {e.OperationMessage}");
-        //throw;
     }
 }
 // Configure the HTTP request pipeline.

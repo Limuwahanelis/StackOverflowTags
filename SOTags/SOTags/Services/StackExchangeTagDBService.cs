@@ -58,7 +58,7 @@ namespace SOTags.Services
             List<string?> allNames= new List<string?>();
             while ( numberOfTagsUpdated < _tagsRepository.GetNumberOfTagsInDB())
             {
-                List<string?> tagsNames = new List<string?> { "graph", "chart", "c++", "charts" }; //_tagsRepository.GetTagsName(pageSize, pageIndex-1);
+                List<string?> tagsNames = _tagsRepository.GetTagsName(_pageSize, pageIndex-1);
                 allNames.AddRange(tagsNames);
                 string tagsToUpdate = string.Join(";", tagsNames);
                 // If tags contains some special characters it needs to be properly encoded for request to work

@@ -38,7 +38,7 @@ namespace SOTags.Repositories
         public List<string?> GetTagsName(int pageSize,int pageIndex)
         {
             List<string?> toReturn;
-            toReturn = _context.Tags.OrderBy(t=>t.Count).Skip(pageSize* pageIndex).Take(pageSize).Select(t=>t.Name).ToList();
+            toReturn = _context.Tags.OrderByDescending(t=>t.Count).Skip(pageSize* pageIndex).Take(pageSize).Select(t=>t.Name).ToList();
             return toReturn;
         }
         public void CalculateTagsUsage()
