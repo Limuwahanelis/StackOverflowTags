@@ -53,7 +53,7 @@ namespace SOTags.Controllers
             catch (StackExchangeServerCouldNotBeReachedException ex)
             {
                 string message = $"An problem occured when reaching Stack Exchange server. Message from server: {ex.StackExchangeSetverMessage}\n" +
-                $"Managed to {ex.OperationMessage}";
+                $"{ex.OperationMessage}";
                 Log.Error("{message}", message);
                 return BadRequest(message);
             }

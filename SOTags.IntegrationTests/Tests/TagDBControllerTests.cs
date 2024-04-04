@@ -61,7 +61,7 @@ namespace SOTags.IntegrationTests.Tests
             string content = await response.Content.ReadAsStringAsync();
 
             Assert.Equal("An problem occured when reaching Stack Exchange server. Message from server:"+
-            " \nManaged to Imported or updated 40 tags from required 100 entries", content);
+            " \nImported or updated 40 tags from required 100 entries", content);
             Assert.True(!response.IsSuccessStatusCode);
 
             httpFactory.Dispose();
