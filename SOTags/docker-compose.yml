@@ -12,7 +12,10 @@ services:
   sotags:
     image: ${DOCKER_REGISTRY-}sotags
     ports:
-     - 8001:80
+      - "9000:8080"
+      - "9001:8081"
+    environment:
+      - ASPNETCORE_HTTPS_PORT=8081
     build:
       context: SOTags
       dockerfile: Dockerfile
